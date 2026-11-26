@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="Dost League — Your life as a daily episode. Make decisions, watch your friends react in real-time." />
+  <meta name="theme-color" content="#0d0d1c" />
+  <title>Dost League — Today's Episode</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎭</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- SPLASH SCREEN -->
+  <div id="splash-screen" class="screen active">
+    <div class="splash-bg"></div>
+    <div class="splash-content">
+      <div class="splash-logo">
+        <span class="logo-icon">🎭</span>
+        <h1 class="logo-title">Dost<span class="logo-accent">League</span></h1>
+        <p class="logo-tagline">Your Life. Daily Episode. Real Chaos.</p>
+        <div class="logo-badge">🇮🇳 &nbsp;Made for Indian Geniuses</div>
+      </div>
+
+      <div class="section-label">🔥 Pick Today's Episode</div>
+      <div class="splash-cards">
+        <div class="scenario-card" data-scenario="startup" id="scenario-startup">
+          <span class="card-emoji">🚀</span>
+          <span class="card-title">Startup Founder</span>
+          <span class="card-sub">Quit job. Chase dreams. Cry later.</span>
+        </div>
+        <div class="scenario-card" data-scenario="upsc" id="scenario-upsc">
+          <span class="card-emoji">📚</span>
+          <span class="card-title">UPSC Aspirant</span>
+          <span class="card-sub">6 lakh rivals. 1 seat. Let's go.</span>
+        </div>
+        <div class="scenario-card" data-scenario="bangalore" id="scenario-bangalore">
+          <span class="card-emoji">🏙️</span>
+          <span class="card-title">Move to Bangalore</span>
+          <span class="card-sub">Tech bro era begins now.</span>
+        </div>
+        <div class="scenario-card" data-scenario="marriage" id="scenario-marriage">
+          <span class="card-emoji">💍</span>
+          <span class="card-title">Love vs Arranged</span>
+          <span class="card-sub">The family drama season finale.</span>
+        </div>
+      </div>
+
+      <div class="splash-divider"></div>
+
+      <div class="splash-custom">
+        <p class="custom-label">✨ Write your own episode</p>
+        <div class="custom-input-row">
+          <input type="text" id="custom-scenario-input" placeholder="e.g. Become a cricket commentator..." maxlength="80" />
+          <button id="custom-scenario-btn" class="btn-primary">▶</button>
+        </div>
+      </div>
+
+      <div class="splash-footer">
+        <button id="splash-history-btn" class="btn-ghost-sm">📋 My Episodes</button>
+        <button id="splash-ai-settings-btn" class="btn-ghost-sm ai-settings-trigger" style="display:none">
+          <span class="ai-dot" id="ai-dot"></span> Groq AI
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GEMINI API SETTINGS PANEL -->
+  <div id="ai-settings-panel" class="ai-panel hidden">
+    <div class="ai-panel-box">
+      <div class="ai-panel-header">
+        <div class="ai-panel-title">
+          <span class="ai-gem-icon">⚡</span>
+          <span>Groq AI Mode</span>
+        </div>
+        <button id="ai-panel-close" class="icon-btn">✕</button>
+      </div>
+
+      <p class="ai-panel-desc">
+        Add your <strong>Groq API key</strong> to unlock dynamic, AI-powered dialogues.
+        Each character will respond uniquely to every decision you make.
+      </p>
+
+      <div class="ai-status-row" id="ai-status-row">
+        <span class="ai-status-dot" id="ai-status-dot"></span>
+        <span class="ai-status-text" id="ai-status-text">No key saved</span>
+      </div>
+
+      <div class="ai-key-input-row">
+        <input
+          type="password"
+          id="ai-key-input"
+          class="ai-key-input"
+          placeholder="gsk_..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="ai-key-toggle" class="icon-btn" title="Show/Hide">👁</button>
+      </div>
+
+      <div class="ai-panel-actions">
+        <button id="ai-key-save" class="btn-primary">Save Key</button>
+        <button id="ai-key-validate" class="btn-secondary">Test Connection</button>
+        <button id="ai-key-clear" class="btn-ghost">Clear</button>
+      </div>
+
+      <div class="ai-hint">
+        🔑 Get your free key at <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com</a>
+        <br />Free · Works in India · No billing needed · Powered by Llama 3.1
+        <br />Your key is stored only in your browser (localStorage).
+      </div>
+    </div>
+    <div class="ai-panel-backdrop" id="ai-panel-backdrop"></div>
+  </div>
+
+  <!-- SIMULATION SCREEN -->
+  <div id="sim-screen" class="screen">
+
+    <!-- TOP HUD -->
+    <div id="hud" class="hud">
+      <button id="back-btn" class="hud-back" title="Back">←</button>
+      <div class="hud-metrics">
+        <div class="metric" id="metric-bank">
+          <span class="metric-icon">💰</span>
+          <div class="metric-info">
+            <span class="metric-value" id="bank-value">₹50K</span>
+            <div class="metric-bar-wrap"><div class="metric-bar" id="bank-bar"></div></div>
+          </div>
+        </div>
+        <div class="metric" id="metric-happy">
+          <span class="metric-icon">😊</span>
+          <div class="metric-info">
+            <span class="metric-value" id="happy-value">65%</span>
+            <div class="metric-bar-wrap"><div class="metric-bar" id="happy-bar"></div></div>
+          </div>
+        </div>
+        <div class="metric" id="metric-approval">
+          <span class="metric-icon">🙏</span>
+          <div class="metric-info">
+            <span class="metric-value" id="approval-value">70%</span>
+            <div class="metric-bar-wrap"><div class="metric-bar" id="approval-bar"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE PROGRESS BAR -->
+    <div id="scene-progress" class="scene-progress">
+      <div class="scene-progress-info">
+        <span id="scene-counter" class="scene-counter">Scene 1 of 3</span>
+        <span id="scene-name" class="scene-name">Setting the Stage</span>
+      </div>
+      <div class="scene-track">
+        <div id="scene-fill" class="scene-fill"></div>
+      </div>
+    </div>
+
+    <!-- EPISODE BADGE -->
+    <div id="episode-badge" class="episode-badge">Day 1 — The Leap</div>
+
+    <!-- CHAT FEED -->
+    <div id="chat-feed" class="chat-feed"></div>
+
+    <!-- TYPING INDICATOR -->
+    <div id="typing-indicator" class="typing-indicator hidden">
+      <div class="typing-avatar" id="typing-avatar">👩‍🦱</div>
+      <div class="typing-bubble">
+        <span class="typing-name" id="typing-name">Amma</span>
+        <div class="typing-dots"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+
+    <!-- CHOICES PANEL -->
+    <div id="choices-panel" class="choices-panel hidden">
+      <p class="choices-label" id="choices-label">Choose your move</p>
+      <div id="choices-list" class="choices-list"></div>
+    </div>
+
+  </div>
+
+  <!-- EPISODE SUMMARY SCREEN -->
+  <div id="summary-screen" class="screen">
+    <div class="summary-bg"></div>
+    <div class="summary-content">
+
+      <div class="summary-tag">📺 Today's Episode</div>
+      <h2 class="summary-title" id="summary-title">The Startup Disaster</h2>
+      <p class="summary-desc" id="summary-desc">You quit your job, burned half your savings, and somehow still think it's going great.</p>
+
+      <!-- Desi Closing Line -->
+      <div class="desi-line" id="desi-line">🙏 Amma is still not convinced.</div>
+
+      <div class="summary-label-card" id="summary-label-card">
+        <span class="summary-label-emoji" id="summary-label-emoji">🎯</span>
+        <div>
+          <div class="summary-label-title" id="summary-label-title">The Risky Dreamer</div>
+          <div class="summary-label-sub">High risk, high drama, high entertainment</div>
+        </div>
+      </div>
+
+      <div class="summary-stats">
+        <div class="summary-stat">
+          <span class="sstat-icon">💰</span>
+          <span class="sstat-label">Balance</span>
+          <span class="sstat-value" id="sstat-bank-val">₹50K</span>
+          <span class="sstat-bar-wrap"><span class="sstat-bar" id="sstat-bank-bar"></span></span>
+        </div>
+        <div class="summary-stat">
+          <span class="sstat-icon">😊</span>
+          <span class="sstat-label">Happiness</span>
+          <span class="sstat-value" id="sstat-happy-val">65%</span>
+          <span class="sstat-bar-wrap"><span class="sstat-bar" id="sstat-happy-bar"></span></span>
+        </div>
+        <div class="summary-stat">
+          <span class="sstat-icon">🙏</span>
+          <span class="sstat-label">Approval</span>
+          <span class="sstat-value" id="sstat-approval-val">70%</span>
+          <span class="sstat-bar-wrap"><span class="sstat-bar" id="sstat-approval-bar"></span></span>
+        </div>
+      </div>
+
+      <div class="summary-actions">
+        <button class="btn-primary" id="share-btn">📤 Share Episode</button>
+        <button class="btn-secondary" id="replay-btn">🔁 Replay This Path</button>
+        <button class="btn-secondary" id="restart-btn">🎬 New Episode</button>
+        <button class="btn-ghost" id="history-btn">📋 My History</button>
+      </div>
+
+      <!-- Next Episode Hook -->
+      <div class="next-ep-hook" id="next-ep-hook">
+        <div class="next-ep-label">COMING UP NEXT</div>
+        <div class="next-ep-text" id="next-ep-text">Month 1 — Reality has entered the chat 🔥</div>
+        <button class="btn-next-ep" id="next-ep-btn">Watch Next Episode →</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- HISTORY PANEL (slide-in) -->
+  <div id="history-panel" class="history-panel hidden">
+    <div class="history-header">
+      <h3>📺 My Episodes</h3>
+      <button id="history-close" class="icon-btn">✕</button>
+    </div>
+    <div id="history-list" class="history-list"></div>
+  </div>
+  <div id="history-overlay" class="overlay hidden"></div>
+
+  <!-- SHARE MODAL -->
+  <div id="share-modal" class="modal hidden">
+    <div class="modal-box">
+      <h3 class="modal-title">📤 Share Your Episode</h3>
+      <div class="share-card" id="share-card-preview"></div>
+      <div class="modal-actions">
+        <button class="btn-primary" id="copy-share-btn">Copy & Share</button>
+        <button class="btn-ghost" id="share-close-btn">Close</button>
+      </div>
+    </div>
+    <div class="modal-backdrop"></div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="data.js"></script>
+  <script src="gemini.js"></script>
+  <script src="dialogue.js"></script>
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+  <script src="ai-settings.js"></script>
+</body>
+</html>
