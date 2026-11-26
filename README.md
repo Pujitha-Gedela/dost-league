@@ -43,4 +43,5 @@ No build tools, servers, or API keys are required:
 1. Clone the repository:
    ```bash
    git clone [https://github.com/Pujitha-Gedela/dost-league.git](https://github.com/Pujitha-Gedela/dost-league.git)
-   Open index.html directly in any modern browser (Chrome, Edge, Safari) or serve via VS Code Live Server.
+   
+ Open index.html directly in any modern browser (Chrome, Edge, Safari) or serve via VS Code Live Server.  
